@@ -223,7 +223,7 @@ function (
                         for (pickKey in pickListItems) {
                             if (pickKey.indexOf("index_") < 0) {
                                 addresses = pickListItems[pickKey].Addresses;
-                                //addrList = "<ul>";
+
                                 list = dojo.create("ul");
                                 for (ind = 0; ind < addresses.length; ind++) {
                                     _this.listItemIndexes[itemIndex] = itemInd + "," + pickKey;
@@ -231,9 +231,8 @@ function (
                                     listItem.onclick = listItemClicked;
                                     list.appendChild(listItem);
                                     itemIndex++;
-                                    //addrList += "<li value='" + itemInd + "," + pickKey + "'>" + addresses[ind] + "</li>";
                                 }
-                                //addrList += "</ul>";
+
                                 _this.aContainer.addChild(new TitlePane({
                                     title: pickListItems[pickKey].PickListDescription,
                                     content: list,

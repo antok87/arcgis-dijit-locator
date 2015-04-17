@@ -1,0 +1,6 @@
+*.csproj
+*.exe
+*.manifest
+*.cache
+*.cs
+*.user
