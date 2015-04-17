@@ -1,0 +1,159 @@
+﻿<!--
+ | Copyright 2015 ESRI (UK) Limited
+ |
+ | Licensed under the Apache License, Version 2.0 (the "License");
+ | you may not use this file except in compliance with the License.
+ | You may obtain a copy of the License at
+ |
+ |    http://www.apache.org/licenses/LICENSE-2.0
+ |
+ | Unless required by applicable law or agreed to in writing, software
+ | distributed under the License is distributed on an "AS IS" BASIS,
+ | WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ | See the License for the specific language governing permissions and
+ | limitations under the License.
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Locator Widget</title>
+        <!-- Latest compiled and minified CSS 
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />-->
+
+        <!-- Optional theme 
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css" />-->
+        <link rel="stylesheet" href="http://js.arcgis.com/3.13/dijit/themes/claro/claro.css">
+        <link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+
+        
+        <!-- Locator CSS -->
+        <link rel="stylesheet" type="text/css" href="js/resources/Locator.css" />
+        <!--<link rel="stylesheet" type="text/css" href="js/resources/LocatorLayer.css" />
+        <link rel="stylesheet" type="text/css" href="js/resources/LocatorItem.css" />-->
+
+        <style type="text/css">
+            a:hover,a:focus {
+                text-decoration: none;
+            }
+
+        </style>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script>
+            var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            var dojoConfig = {
+                async: true,
+                has: { "native-xhr2": false },
+                packages: [{
+                    name: "app",
+                    location: package_path + '/js'
+                }]
+            };
+        </script>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>        
+        <script src="http://js.arcgis.com/3.13/"></script>
+
+        <style>
+
+            #map_root {
+                min-height: 800px !important;
+            }
+            #map{         
+                height: 100% !important;
+                width: 100%;       
+                margin: 0;
+                padding: 0;
+            }
+
+            #locatorWidget {
+                display: block;
+                position: absolute;
+                z-index: 2;
+                top: 20px;
+                left: 74px;
+            }
+        </style>
+
+
+
+        <script>
+            require([
+              "esri/map", "app/Locator", "esri/layers/FeatureLayer", "esri/InfoTemplate", "esri/SpatialReference", "esri/geometry/Extent", "dojo/domReady!"
+            ], function (Map, LocatorWidget, FeatureLayer, InfoTemplate, SpatialReference, Extent) {
+                var map = new Map("map", {
+                    basemap: "gray",
+                    center: [-97, 38], // lon, lat
+                    zoom: 5
+                });
+
+                var locatorWidget = new LocatorWidget({
+                    enableButtonMode: false, //this enables the search widget to display as a single button
+                    enableLabel: false,
+                    enableInfoWindow: true,
+                    showInfoWindowOnSelect: false,
+                    map: map
+                }, "locatorWidget");
+
+                var sources = locatorWidget.get("sources");
+
+                //Push the sources used to search, by default the ArcGIS Online World geocoder is included. In addition there is a feature layer of US congressional districts. The districts search is set up to find the "DISTRICTID". Also, a feature layer of senator information is set up to find based on the senator name.
+
+                sources.push({
+                    featureLayer: new FeatureLayer("http://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/CongressionalDistricts/FeatureServer/0"),
+                    searchFields: ["DISTRICTID"],
+                    displayField: "DISTRICTID",
+                    exactMatch: false,
+                    outFields: ["DISTRICTID", "NAME", "PARTY"],
+                    name: "Congressional Districts",
+                    placeholder: "3708",
+                    maxResults: 6,
+                    maxSuggestions: 6,
+
+                    //Create an InfoTemplate and include three fields
+                    infoTemplate: new InfoTemplate("Congressional District", "District ID: ${DISTRICTID}</br>Name: ${NAME}</br>Party Affiliation: ${PARTY}"),
+                    enableSuggestions: true,
+                    minCharacters: 0
+                });
+
+                sources.push({
+                    featureLayer: new FeatureLayer("http://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/US_Senators/FeatureServer/0"),
+                    searchFields: ["Name"],
+                    displayField: "Name",
+                    exactMatch: false,
+                    name: "Senator",
+                    outFields: ["*"],
+                    placeholder: "Senator name",
+                    maxResults: 6,
+                    maxSuggestions: 6,
+
+                    //Create an InfoTemplate
+
+                    infoTemplate: new InfoTemplate("Senator information", "Name: ${Name}</br>State: ${State}</br>Party Affiliation: ${Party}</br>Phone No: ${Phone_Number}<br><a href=${Web_Page} target=_blank ;'>Website</a>"),
+
+                    enableSuggestions: true,
+                    minCharacters: 0
+                });
+
+                //Set the sources above to the search widget
+                locatorWidget.set("sources", sources);
+
+                locatorWidget.startup();
+
+            });
+        </script>
+    </head>
+    <body class="claro">
+        <div id="locatorWidget"></div>
+        <div id="map"></div>
+    </body>
+</html>

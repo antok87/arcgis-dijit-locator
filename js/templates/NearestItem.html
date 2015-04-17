@@ -1,0 +1,30 @@
+﻿
+<div id="${featureId}-feature-container" class="">
+    <!--container for feature row-->
+    <div class="${baseClass}-search-features">
+        <!--Actual feature row-->
+        <div id="search-features-inner-${featureId}" class="${baseClass}-search-features-inner">
+            <!--Make whole row clickable-->
+            <a href="#" title="${summaryDetailsTitle}" class="${baseClass}-text-place-summary-details">
+                <!--index-->
+                <span class="${baseClass}-feature-marker label pull-left" style="display: ${showCountersVisible}">${featureNumber}</span>
+                <!--div for infor-->
+                <div class="${baseClass}-text-place-details">
+                    <!--feature name-->
+                    <h3 id="${featureId}-feature-name" class="${baseClass}-text-place-title">${featureTitle}</h3>
+                    
+				    <!-- other fields-->
+                    <div id="${featureId}-field-values" class="${baseClass}-text-place-basic-details" >
+                        <div class="${baseClass}-details" data-dojo-attach-point="featureDetails"></div>
+                    </div>
+                    <span style="display: ${showDistanceVisible}">${distance}&nbsp;${units}</span>
+                    <span class="${baseClass}-showonmap-link"  style="display: ${showOnMapVisible}">
+                        <button data-dojo-attach-point="mapButton" type="button" class="btn btn-link" title="${showOnMapTitleText}">${showOnMapLinktext}</button>
+                    </span>
+                </div>
+                
+            </a>
+            
+        </div>
+    </div>
+</div>

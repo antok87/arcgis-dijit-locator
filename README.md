@@ -1,2 +1,148 @@
-# arcgis-dijit-locator
-Inherits from the Esri Search widget but displays a pick list for multiple addresses
+arcgis-dijit-locator [![Build Status](https://travis-ci.org/EsriUK/arcgis-dijit-locator.svg?branch=master)](https://travis-ci.org/EsriUK/arcgis-dijit-locator) [![Coverage Status](https://coveralls.io/repos/EsriUK/arcgis-dijit-locator/badge.svg?branch=master)](https://coveralls.io/r/EsriUK/arcgis-dijit-locator?branch=master)
+====================
+
+## Features
+The Locator widget extends the Esri arcgis-dijit-search to allow pick lists to be displayed when multiple results are returned
+
+The widget is driven by a webmap. You configure the distance that you want to search and the maximum number of features you want to list. 
+The widget finds all the features in each layer up to these limits that are in the webmap. The information is presented to the end user as a list view with the details of each feature.  
+The details shown replicate those that are setup in the popup within your webmap.
+
+[View it live](https://apps.esriuk.com/app/LocatorWidgetDemo/1/wmt/view/8b1ed9f9a2a24048ac25766264f333cb/index.html)
+
+## Quickstart
+
+```javascript	
+myWidget = new Locator({
+	webmapId: "987654321123456789",
+	location: new Point("-0.8055515", "51.8003171", new SpatialReference({ wkid: 4326 })),
+    searchRadius: 50,
+	maxResults: 5,
+	display: "expandable",
+	showOnMap: true,
+	showCounters: true,
+	showDistance: true,
+	showEmptyLayers: true
+}, "LocatorWidget");
+
+myWidget.startup();
+```
+
+ [New to Github? Get started here.](https://github.com/)
+
+
+## Setup
+Set your dojo config to load the module.
+
+```javascript
+var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+var dojoConfig = {
+	// The locationPath logic below may look confusing but all its doing is
+	// enabling us to load the api from a CDN and load local modules from the correct location.
+	packages: [{
+		name: "application",
+		location: package_path + '/js'
+	}]
+};
+```
+
+## Require module
+Include the module for the Locator.
+
+	require(["application/Locator", ... ], function(Locator, ... ){ ... });
+
+## Constructor
+
+Locator(options, srcNode);
+
+### Options (Object)
+|property|required|type|value|description|
+|---|---|---|---|---|
+|webmapId|x|string|null|The id of the webmap that contains the layers to use for the locator.|
+|location|x|Point|null|The location to use for the query.|
+|searchRadius||Integer|10|The radius to search within, in miles.|
+|maxResults||Integer|5|The number of features to show.|
+|display||string|'expandable'|How to display the results. Expandable or fixed.|
+|showOnMap||Boolean|true|Display the 'Show On Map' link.|
+|showCounters||Boolean|true|Show the feature counts.|
+|showDistance||Boolean|true|Show the distance.|
+|showEmptyLayers||Boolean|true|Show layers with no results|
+|findLocatorMode||String|geodesic|Set the mode used by the find locator task.|
+|layerOptions||Object Array|null|Options for each layer. These override the default options per layer in the web map.|
+
+
+### layerOptions
+This is an array of objects that contain overridden options per layer. You can override one or all layers in the webmap. Any layers not overridden will use the default options.
+You do not have to include all options, just the options you want to override.
+
+### Layer Specific Options (Object)
+|property|required|type|value|description|
+|---|---|---|---|---|
+|usage|x|string|'query'|Allow the layer to be used either for querying or just for display. Values are 'query' or 'display'|
+
+```javascript
+layerOptions: [{
+	itemId: '1234567'
+    maxResults: 3
+    searchRadius: 29,
+    showOnMap: false
+    showCounters: false
+    display: 'fixed',
+	showDistance: false,
+	usage: 'query'
+}, {
+	...
+}]
+```
+
+## Events
+The widget publishes events at various stages of its lifecycle.
+
+### data-loaded
+	topic.subscribe("Locator::data-loaded", function (widget) {});
+
+
+### query-done
+	topic.subscribe("Locator::query-done", function (widget, queryResults) {});
+
+
+### locator-task-done
+	topic.subscribe("Locator::locator-task-done", function (widget, locatorResults) {});
+
+
+### loaded
+	topic.subscribe("Locator::loaded", function (widget) {});
+
+
+### show-layer
+	topic.subscribe("Locator::show-layer", function (results, layerInfo, expanded) {});
+
+
+### show-feature
+	topic.subscribe("Locator::show-feature", function (feature, renderer) {});
+
+
+### show-feature-detail
+	topic.subscribe("Locator::show-feature", function (feature, detailsPanelId) {});
+
+
+## Issues
+
+Find a bug or want to request a new feature?  Please let us know by submitting an issue.
+
+## Contributing
+
+Anyone and everyone is welcome to contribute.
+
+
+## Licensing
+
+Copyright 2015 ESRI (UK) Limited
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the Licence.
+
+A copy of the license is available in the repository's [license.txt](license.txt) file.

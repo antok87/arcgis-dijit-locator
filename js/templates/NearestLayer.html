@@ -1,0 +1,25 @@
+﻿
+<div class="panel panel-default">
+    <!--Header row-->
+    <div class="${baseClass}-heading-container panel-heading" data-dojo-attach-point="showList" role="tab">
+        <a data-toggle="${collapseClass}" href="${layerHref}" data-parent="#${parentId}_layers" aria-expanded="${expanded}" class="${fixedClass}" aria-controls="${layerId}">
+            <!--Number of features-->
+            <span class="${baseClass}-feature-count label pull-left" style="margin-right: 6px; display: ${showCountersVisible}">${numberOfFeatures}</span>
+            <!--Header-->
+            <h4 class="${baseClass}-title panel-title">
+                ${layerName}
+            </h4>
+        </a>
+    </div>
+    <div id='${layerId}' class='${baseClass}-details-container panel-collapse ${collapseClass} ${expandedClass}'>
+        <div class='${baseClass}-details-body panel-body'>
+
+            <p class="${baseClass}-results" style="display: ${showCountersVisible}">${counterWording}</p>
+
+            <!-- Main section of row-->
+            <div data-dojo-attach-point="_features" class="${baseClass}-features-list" style="height: auto;">
+        
+            </div>
+        </div>
+    </div>
+</div>
